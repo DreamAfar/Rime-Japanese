@@ -43,7 +43,7 @@ engine:
     - script_translator
     - reverse_lookup_translator
     - table_translator@custom_phrase  # 添加 调用custom_phrase自定义短语
-    # - lua_translator@date_translator  # 添加 调用Rime-lua插件，自定义系统变量输出日期、星期、时间类型输出
+    - lua_translator@date_translator  # 添加 调用Rime-lua插件，自定义系统变量输出日期、星期、时间类型输出
     # - lua_translator@calculator_translator # 添加 简易计算器lua，按符号"="激活计算器
   filters:
     # - simplifier
@@ -139,10 +139,6 @@ translator:
     - xform/(^|\s)ggo/っご/
     - xform/(^|\s)ssa/っさ/
     - xform/(^|\s)sshi/っし/
-    - xform/(^|\s)sshe/っしぇ/
-    - xform/(^|\s)ssha/っしゃ/
-    - xform/(^|\s)sshu/っしゅ/
-    - xform/(^|\s)ssho/っしょ/
     - xform/(^|\s)ssu/っす/
     - xform/(^|\s)sse/っせ/
     - xform/(^|\s)sso/っそ/
@@ -287,6 +283,10 @@ translator:
     - xform/(^|\s)pyu/ぴゅ/
     - xform/(^|\s)pye/ぴぇ/
     - xform/(^|\s)pyo/ぴょ/
+    - xform/(^|\s)fa/ふぁ/
+    - xform/(^|\s)fi/ふぃ/
+    - xform/(^|\s)fe/ふぇ/
+    - xform/(^|\s)fo/ふぉ/
     - xform/(^|\s)fya/ふゃ/
     - xform/(^|\s)fyu/ふゅ/
     - xform/(^|\s)fyo/ふょ/
@@ -300,6 +300,83 @@ translator:
     - xform/(^|\s)ryu/りゅ/
     - xform/(^|\s)rye/りぇ/
     - xform/(^|\s)ryo/りょ/
+
+    # 前后小罗马字
+    - xform/(^|\s)vva/っゔぁ/
+    - xform/(^|\s)vvi/っゔぃ/
+    - xform/(^|\s)vve/っゔぇ/
+    - xform/(^|\s)vvo/っゔぉ/
+    - xform/(^|\s)vvya/っゔゃ/
+    - xform/(^|\s)vvyu/っゔゅ/
+    - xform/(^|\s)vvyo/っゔょ/
+    - xform/(^|\s)kkya/っきゃ/
+    - xform/(^|\s)kkyu/っきゅ/
+    - xform/(^|\s)kkyo/っきょ/
+    - xform/(^|\s)kkwa/っくぁ/
+    - xform/(^|\s)kkwi/っくぃ/
+    - xform/(^|\s)kkwe/っくぇ/
+    - xform/(^|\s)kkwo/っくぉ/
+    - xform/(^|\s)kkwa/っくゎ/
+    - xform/(^|\s)ggya/っぎゃ/
+    - xform/(^|\s)ggyu/っぎゅ/
+    - xform/(^|\s)ggyo/っぎょ/
+    - xform/(^|\s)ggwa/っぐぁ/
+    - xform/(^|\s)ggwi/っぐぃ/
+    - xform/(^|\s)ggwe/っぐぇ/
+    - xform/(^|\s)ggwo/っぐぉ/
+    - xform/(^|\s)ggwa/っぐゎ/
+    - xform/(^|\s)sshe/っしぇ/
+    - xform/(^|\s)ssha/っしゃ/
+    - xform/(^|\s)sshu/っしゅ/
+    - xform/(^|\s)ssho/っしょ/
+    - xform/(^|\s)sswi/っすぃ/
+    - xform/(^|\s)jje/っじぇ/
+    - xform/(^|\s)jja/っじゃ/
+    - xform/(^|\s)jju/っじゅ/
+    - xform/(^|\s)jjo/っじょ/
+    - xform/(^|\s)zzi/っずぃ/
+    - xform/(^|\s)tche/っちぇ/
+    - xform/(^|\s)tcha/っちゃ/
+    - xform/(^|\s)tchu/っちゅ/
+    - xform/(^|\s)tcho/っちょ/
+    - xform/(^|\s)ttsa/っつぁ/
+    - xform/(^|\s)ttsi/っつぃ/
+    - xform/(^|\s)ttse/っつぇ/
+    - xform/(^|\s)ttso/っつぉ/
+    - xform/(^|\s)tti/ってぃ/
+    - xform/(^|\s)ttya/ってゃ/
+    - xform/(^|\s)ttyu/ってゅ/
+    - xform/(^|\s)ttyo/ってょ/
+    - xform/(^|\s)ttu/っとぅ/
+    - xform/(^|\s)jje/っぢぇ/
+    - xform/(^|\s)jja/っぢゃ/
+    - xform/(^|\s)jju/っぢゅ/
+    - xform/(^|\s)jjo/っぢょ/
+    - xform/(^|\s)ddi/っでぃ/
+    - xform/(^|\s)ddya/っでゃ/
+    - xform/(^|\s)ddyu/っでゅ/
+    - xform/(^|\s)ddyo/っでょ/
+    - xform/(^|\s)ddu/っどぅ/
+    - xform/(^|\s)hhya/っひゃ/
+    - xform/(^|\s)hhyu/っひゅ/
+    - xform/(^|\s)hhyo/っひょ/
+    - xform/(^|\s)ffa/っふぁ/
+    - xform/(^|\s)ffi/っふぃ/
+    - xform/(^|\s)ffe/っふぇ/
+    - xform/(^|\s)ffo/っふぉ/
+    - xform/(^|\s)ffya/っふゃ/
+    - xform/(^|\s)ffyu/っふゅ/
+    - xform/(^|\s)ffyo/っふょ/
+    - xform/(^|\s)hhou/っほぅ/
+    - xform/(^|\s)bbya/っびゃ/
+    - xform/(^|\s)bbyu/っびゅ/
+    - xform/(^|\s)bbyo/っびょ/
+    - xform/(^|\s)ppya/っぴゃ/
+    - xform/(^|\s)ppyu/っぴゅ/
+    - xform/(^|\s)ppyo/っぴょ/
+    - xform/(^|\s)rrya/っりゃ/
+    - xform/(^|\s)rryu/っりゅ/
+    - xform/(^|\s)rryo/っりょ/
 
     # 五十音
     - xform/(^|\s)a/あ/
@@ -347,6 +424,7 @@ translator:
     - xform/(^|\s)hu|fu/ふ/
     - xform/(^|\s)he/へ/
     - xform/(^|\s)ho/ほ/
+    - xform/(^|\s)hou/ほぅ/
     - xform/(^|\s)ba/ば/
     - xform/(^|\s)bi/び/
     - xform/(^|\s)bu/ぶ/

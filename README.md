@@ -16,6 +16,10 @@ Rime Japanese Input Method Solution。一个使用Rime的日本語入力
 
 ![image](./assets/日本語入力.png)
 
+iOS上iRime使用效果：
+
+<img src="./assets/iRime效果.jpg" alt="iRime效果" style="zoom:50%;" />
+
 添加了Emoji🥳表情：
 
 ![image](./assets/ふざけた顔.png)![image](./assets/笑顔.png)
