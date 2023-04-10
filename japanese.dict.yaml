@@ -1,0 +1,13 @@
+# japanese.dict
+# encoding: utf-8
+
+---
+name: japanese
+version: 'v0.3-20230410'
+
+import_tables:
+  - japanese.kana
+  - japanese.mozc
+  - japanese.jmdict
+  - japanese.kanji
+  

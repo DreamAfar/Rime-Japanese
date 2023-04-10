@@ -1,0 +1,28 @@
+# Rime dictionary
+# encoding: utf-8
+# vim: set noet:
+# 个人补充的一些日语汉字
+---
+name: japanese.kanji
+version: "v0.2-20230410"
+sort: by_weight
+---
+...
+
+難	mu zu ka
+願	ne ga
+腹	na ka
+救	kyu u
+話	ha na
+飯	ha n
+洗って	a ra tte
+洗	a ra
+置	o
+緑色	mi do ri sho ku
+緑	ryo ku
+払	ha ra
+払	ba ra
+言った	i tta
+言	i
+貸	ka
+

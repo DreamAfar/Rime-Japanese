@@ -1,0 +1,437 @@
+# Rime schema
+# vim: set sw=2 sts=2 et:
+# encoding: utf-8
+
+schema:
+  schema_id: japanese
+  name: 日本語入力
+  version: 'v1.0 2023.4.10'
+  author:
+    - ensigma96 <ensigma96@gmail.com>
+  dependencies:
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 日语, 英文 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+  - name: emoji_jp
+    reset: 1
+    states: [ "😭️", "😄️" ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - script_translator
+    - reverse_lookup_translator
+    - table_translator@custom_phrase  # 添加 调用custom_phrase自定义短语
+    # - lua_translator@date_translator  # 添加 调用Rime-lua插件，自定义系统变量输出日期、星期、时间类型输出
+    # - lua_translator@calculator_translator # 添加 简易计算器lua，按符号"="激活计算器
+  filters:
+    # - simplifier
+    - uniquifier
+    - simplifier@emoji_jp
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba:,.!()/-=_+    #'zyxwvutsrqponmlkjihgfedcba-_'
+  delimiter: " '"  #"，"逗号分词
+  algebra:
+  # 特殊假名处理
+    # - xform/[aiueo]ly/y/
+    # - xform/[aiueo]lw/w/
+    # - xform/ltu([a-z])/$1$1/
+    # - xform/[aiueo]l([aiueo])/$1/
+
+    # 长音符号
+    # - xform/ー/-
+    # 基础（简拼）
+    # - abbrev/^([a-z]).+$/$1/
+    # - abbrev/^([zcs]h).+$/$1/
+
+    # 兼容其他拼写方式
+    - derive/-/q/      # q => -
+    - derive/fu/hu/  # fu
+    - derive/chi/ti/
+    - derive/tsu/tu/  # tsu
+    - derive/shi/si/  #し
+
+    # 小字母
+    - derive/x/l/              # l = x
+    # - derive/ly([auo])/xy$1/   # lya lyu lyo  => xya xyu xyo
+    # - derive/xy([auo])/ly$1/   # xya xyu xyo  => lya lyu lyo
+    # - derive/ltu/xtu/
+    # - derive/lwa/xwa/
+    # 促音っ
+    # - derive/^([kgptsdhbrjzv])\1([aiueo])/ltu$1$2/
+    # - derive/([t])\1(su)/ltu$1$2/
+    # - derive/^([kszcnhbprftd])\1y([auo])/ltu$1y$2/  # 
+    # - derive/([kg])\1w([aiueo])/ltu$1w$2/  # 
+    # - derive/([f])\1([aieuo])/ltu$1$2/  # ffa ffi ffe ffo
+    # - derive/s(shi)/ltu$1/
+    # - derive/tch([eauo])/ltuch$1/  # tche tcha tchu tcho
+
+    # - derive/zi/ji/
+    # - derive/zy([auo])/j$1/
+    # - derive/sy([auo])/sh$1/
+    # - derive/^nn$/n/
+
+
+translator:
+  dictionary: japanese
+  spelling_hints: 15        # 設定多少字以內候選標註完整帶調拼音〔僅script_translator有效〕
+  enable_completion: true   # 提前显示尚未输入完整码的字〔true 或 false〕编码逐渐提示开关；编码提示
+  enable_sentence: true     # 是否开启自动造句〔true 或 false〕
+  comment_format:
+    - 'xlit|q|ー|'
+  preedit_format:
+    # - xform/(^|\s)ten/・/
+    # - xform/(^|\s)symbol/々/
+    - xform/(^|\s)-/ー/
+    - xform/(^|\s)q/ー/
+    - xform/(^|\s)~/〜/
+
+    - xform/(^|\s)va/ゔぁ/
+    - xform/(^|\s)vi/ゔぃ/
+    - xform/(^|\s)vu/ゔ/
+    - xform/(^|\s)ve/ゔぇ/
+    - xform/(^|\s)vo/ゔぉ/
+    - xform/(^|\s)vya/ゔゃ/
+    - xform/(^|\s)vyu/ゔゅ/
+    - xform/(^|\s)vyo/ゔょ/
+    - xform/(^|\s)vvu/っゔ/
+    - xform/(^|\s)wwha/っうぁ/
+    - xform/(^|\s)wwi/っうぃ/
+    - xform/(^|\s)wwu/っう/
+    - xform/(^|\s)wwe/っうぇ/
+    - xform/(^|\s)wwho/っうぉ/
+    - xform/(^|\s)xxa/っぁ/
+    - xform/(^|\s)xxi/っぃ/
+    - xform/(^|\s)xxu/っぅ/
+    - xform/(^|\s)xxe/っぇ/
+    - xform/(^|\s)xxo/っぉ/
+    - xform/(^|\s)kka/っか/
+    - xform/(^|\s)kki/っき/
+    - xform/(^|\s)kku/っく/
+    - xform/(^|\s)kke/っけ/
+    - xform/(^|\s)kko/っこ/
+    - xform/(^|\s)gga/っが/
+    - xform/(^|\s)ggi/っぎ/
+    - xform/(^|\s)ggu/っぐ/
+    - xform/(^|\s)gge/っげ/
+    - xform/(^|\s)ggo/っご/
+    - xform/(^|\s)ssa/っさ/
+    - xform/(^|\s)sshi/っし/
+    - xform/(^|\s)sshe/っしぇ/
+    - xform/(^|\s)ssha/っしゃ/
+    - xform/(^|\s)sshu/っしゅ/
+    - xform/(^|\s)ssho/っしょ/
+    - xform/(^|\s)ssu/っす/
+    - xform/(^|\s)sse/っせ/
+    - xform/(^|\s)sso/っそ/
+    - xform/(^|\s)zza/っざ/
+    - xform/(^|\s)zzi/っじ/
+    - xform/(^|\s)zzu/っず/
+    - xform/(^|\s)zze/っぜ/
+    - xform/(^|\s)zzo/っぞ/
+    - xform/(^|\s)tta/った/
+    - xform/(^|\s)tti/っち/
+    - xform/(^|\s)ttu/っつ/
+    - xform/(^|\s)tte/って/
+    - xform/(^|\s)tto/っと/
+    - xform/(^|\s)dda/っだ/
+    - xform/(^|\s)ddi/っぢ/
+    - xform/(^|\s)ddu/っづ/
+    - xform/(^|\s)dde/っで/
+    - xform/(^|\s)ddo/っど/
+    - xform/(^|\s)hha/っは/
+    - xform/(^|\s)hhi/っひ/
+    - xform/(^|\s)hhu/っふ/
+    - xform/(^|\s)hhe/っへ/
+    - xform/(^|\s)hho/っほ/
+    - xform/(^|\s)bba/っば/
+    - xform/(^|\s)bbi/っび/
+    - xform/(^|\s)bbu/っぶ/
+    - xform/(^|\s)bbe/っべ/
+    - xform/(^|\s)bbo/っぼ/
+    - xform/(^|\s)ppa/っぱ/
+    - xform/(^|\s)ppi/っぴ/
+    - xform/(^|\s)ppu/っぷ/
+    - xform/(^|\s)ppe/っぺ/
+    - xform/(^|\s)ppo/っぽ/
+    - xform/(^|\s)mma/っま/
+    - xform/(^|\s)mmi/っみ/
+    - xform/(^|\s)mmu/っむ/
+    - xform/(^|\s)mme/っめ/
+    - xform/(^|\s)mmo/っも/
+    - xform/(^|\s)yya/っや/
+    - xform/(^|\s)yyu/っゆ/
+    - xform/(^|\s)yyo/っよ/
+    - xform/(^|\s)xxya/っゃ/
+    - xform/(^|\s)xxyu/っゅ/
+    - xform/(^|\s)xxyo/っょ/
+    - xform/(^|\s)rra/っら/
+    - xform/(^|\s)rri/っり/
+    - xform/(^|\s)rru/っる/
+    - xform/(^|\s)rre/っれ/
+    - xform/(^|\s)rro/っろ/
+    - xform/(^|\s)xxwa/っゎ/
+    - xform/(^|\s)wwa/っわ/
+    - xform/(^|\s)wwyi/っゐ/
+    - xform/(^|\s)wwye/っゑ/
+    - xform/(^|\s)wwo/っを/
+    - xform/(^|\s)ye/いぇ/
+    - xform/(^|\s)wha/うぁ/
+    - xform/(^|\s)kya/きゃ/
+    - xform/(^|\s)kyi/きぃ/
+    - xform/(^|\s)kyu/きゅ/
+    - xform/(^|\s)kye/きぇ/
+    - xform/(^|\s)kyo/きょ/
+    - xform/(^|\s)gya/ぎゃ/
+    - xform/(^|\s)gyi/ぎぃ/
+    - xform/(^|\s)gyu/ぎゅ/
+    - xform/(^|\s)gye/ぎぇ/
+    - xform/(^|\s)gyo/ぎょ/
+    - xform/(^|\s)qa/くぁ/
+    - xform/(^|\s)qi/くぃ/
+    - xform/(^|\s)qe/くぇ/
+    - xform/(^|\s)qo/くぉ/
+    - xform/(^|\s)sha|sya/しゃ/
+    - xform/(^|\s)syi/しぃ/
+    - xform/(^|\s)shu|syu/しゅ/
+    - xform/(^|\s)sye/しぇ/
+    - xform/(^|\s)sho|syo/しょ/
+    - xform/(^|\s)zya|ja|jya/じゃ/
+    - xform/(^|\s)zyi/じぃ/
+    - xform/(^|\s)zyu|ju|jyu/じゅ/
+    - xform/(^|\s)zye/じぇ/
+    - xform/(^|\s)zyo|jo|jyo/じょ/
+    - xform/(^|\s)swa/すぁ/
+    - xform/(^|\s)swi/すぃ/
+    - xform/(^|\s)swu/すぅ/
+    - xform/(^|\s)swe/すぇ/
+    - xform/(^|\s)swo/すぉ/
+    - xform/(^|\s)zwa/ずぁ/
+    - xform/(^|\s)zwi/ずぃ/
+    - xform/(^|\s)zwu/ずぅ/
+    - xform/(^|\s)zwe/ずぇ/
+    - xform/(^|\s)zwo/ずぉ/
+    - xform/(^|\s)cha|tya/ちゃ/
+    - xform/(^|\s)tyi/ちぃ/
+    - xform/(^|\s)chu|tyu/ちゅ/
+    - xform/(^|\s)tye/ちぇ/
+    - xform/(^|\s)cho|tyo/ちょ/
+    - xform/(^|\s)dya/ぢゃ/
+    - xform/(^|\s)dyi/ぢぃ/
+    - xform/(^|\s)dyu/ぢゅ/
+    - xform/(^|\s)dye/ぢぇ/
+    - xform/(^|\s)dyo/ぢょ/
+    - xform/(^|\s)tsa/つぁ/
+    - xform/(^|\s)tsi/つぃ/
+    - xform/(^|\s)tse/つぇ/
+    - xform/(^|\s)tso/つぉ/
+    - xform/(^|\s)tha/てゃ/
+    - xform/(^|\s)thi/てぃ/
+    - xform/(^|\s)thu/てゅ/
+    - xform/(^|\s)the/てぇ/
+    - xform/(^|\s)tho/てょ/
+    - xform/(^|\s)dha/でゃ/
+    - xform/(^|\s)dhi/でぃ/
+    - xform/(^|\s)dhu/でゅ/
+    - xform/(^|\s)dhe/でぇ/
+    - xform/(^|\s)dho/でょ/
+    - xform/(^|\s)twa/とぁ/
+    - xform/(^|\s)twi/とぃ/
+    - xform/(^|\s)twu/とぅ/
+    - xform/(^|\s)twe/とぇ/
+    - xform/(^|\s)two/とぉ/
+    - xform/(^|\s)dwa/どぁ/
+    - xform/(^|\s)dwi/どぃ/
+    - xform/(^|\s)dwu/どぅ/
+    - xform/(^|\s)dwe/どぇ/
+    - xform/(^|\s)dwo/どぉ/
+    - xform/(^|\s)nya/にゃ/
+    - xform/(^|\s)nyi/にぃ/
+    - xform/(^|\s)nyu/にゅ/
+    - xform/(^|\s)nye/にぇ/
+    - xform/(^|\s)nyo/にょ/
+    - xform/(^|\s)hya/ひゃ/
+    - xform/(^|\s)hyi/ひぃ/
+    - xform/(^|\s)hyu/ひゅ/
+    - xform/(^|\s)hye/ひぇ/
+    - xform/(^|\s)hyo/ひょ/
+    - xform/(^|\s)bya/びゃ/
+    - xform/(^|\s)byi/びぃ/
+    - xform/(^|\s)byu/びゅ/
+    - xform/(^|\s)bye/びぇ/
+    - xform/(^|\s)byo/びょ/
+    - xform/(^|\s)pya/ぴゃ/
+    - xform/(^|\s)pyi/ぴぃ/
+    - xform/(^|\s)pyu/ぴゅ/
+    - xform/(^|\s)pye/ぴぇ/
+    - xform/(^|\s)pyo/ぴょ/
+    - xform/(^|\s)fya/ふゃ/
+    - xform/(^|\s)fyu/ふゅ/
+    - xform/(^|\s)fyo/ふょ/
+    - xform/(^|\s)mya/みゃ/
+    - xform/(^|\s)myi/みぃ/
+    - xform/(^|\s)myu/みゅ/
+    - xform/(^|\s)mye/みぇ/
+    - xform/(^|\s)myo/みょ/
+    - xform/(^|\s)rya/りゃ/
+    - xform/(^|\s)ryi/りぃ/
+    - xform/(^|\s)ryu/りゅ/
+    - xform/(^|\s)rye/りぇ/
+    - xform/(^|\s)ryo/りょ/
+
+    # 五十音
+    - xform/(^|\s)a/あ/
+    - xform/(^|\s)i/い/
+    - xform/(^|\s)u/う/
+    - xform/(^|\s)e/え/
+    - xform/(^|\s)o/お/
+    - xform/(^|\s)ka/か/
+    - xform/(^|\s)ki/き/
+    - xform/(^|\s)ku/く/
+    - xform/(^|\s)ke/け/
+    - xform/(^|\s)ko/こ/
+    - xform/(^|\s)ga/が/
+    - xform/(^|\s)gi/ぎ/
+    - xform/(^|\s)gu/ぐ/
+    - xform/(^|\s)ge/げ/
+    - xform/(^|\s)go/ご/
+    - xform/(^|\s)sa/さ/
+    - xform/(^|\s)shi|si/し/
+    - xform/(^|\s)su/す/
+    - xform/(^|\s)se/せ/
+    - xform/(^|\s)so/そ/
+    - xform/(^|\s)za/ざ/
+    - xform/(^|\s)zi|ji/じ/
+    - xform/(^|\s)zu/ず/
+    - xform/(^|\s)ze/ぜ/
+    - xform/(^|\s)zo/ぞ/
+    - xform/(^|\s)ta/た/
+    - xform/(^|\s)ti|chi/ち/
+    - xform/(^|\s)tu|tsu/つ/
+    - xform/(^|\s)te/て/
+    - xform/(^|\s)to/と/
+    - xform/(^|\s)da/だ/
+    - xform/(^|\s)di/ぢ/
+    - xform/(^|\s)du/づ/
+    - xform/(^|\s)de/で/
+    - xform/(^|\s)do/ど/
+    - xform/(^|\s)na/な/
+    - xform/(^|\s)ni/に/
+    - xform/(^|\s)nu/ぬ/
+    - xform/(^|\s)ne/ね/
+    - xform/(^|\s)no/の/
+    - xform/(^|\s)ha/は/
+    - xform/(^|\s)hi/ひ/
+    - xform/(^|\s)hu|fu/ふ/
+    - xform/(^|\s)he/へ/
+    - xform/(^|\s)ho/ほ/
+    - xform/(^|\s)ba/ば/
+    - xform/(^|\s)bi/び/
+    - xform/(^|\s)bu/ぶ/
+    - xform/(^|\s)be/べ/
+    - xform/(^|\s)bo/ぼ/
+    - xform/(^|\s)pa/ぱ/
+    - xform/(^|\s)pi/ぴ/
+    - xform/(^|\s)pu/ぷ/
+    - xform/(^|\s)pe/ぺ/
+    - xform/(^|\s)po/ぽ/
+    - xform/(^|\s)ma/ま/
+    - xform/(^|\s)mi/み/
+    - xform/(^|\s)mu/む/
+    - xform/(^|\s)me/め/
+    - xform/(^|\s)mo/も/
+    - xform/(^|\s)ya/や/
+    - xform/(^|\s)yu/ゆ/
+    - xform/(^|\s)yo/よ/
+    - xform/(^|\s)ra/ら/
+    - xform/(^|\s)ri/り/
+    - xform/(^|\s)ru/る/
+    - xform/(^|\s)re/れ/
+    - xform/(^|\s)ro/ろ/
+    - xform/(^|\s)wa/わ/
+    - xform/(^|\s)wyi/ゐ/
+    - xform/(^|\s)wye/ゑ/
+    - xform/(^|\s)wo/を/
+    - xform/(^|\s)n/ん/
+
+    #小假名
+    - xform/(^|\s)la|xa/ぁ/
+    - xform/(^|\s)li|xi/ぃ/
+    - xform/(^|\s)lu|xu/ぅ/
+    - xform/(^|\s)le|xe/ぇ/
+    - xform/(^|\s)lo|xo/ぉ/
+    - xform/(^|\s)lya|xya/ゃ/
+    - xform/(^|\s)lyu|xyu/ゅ/
+    - xform/(^|\s)lyo|xyo/ょ/
+    - xform/(^|\s)lka|xka/ヵ/
+    - xform/(^|\s)lke|xke/ヶ/
+    - xform/(^|\s)lwa|xwa/ゎ/
+
+
+# 自定义短语 Custom_phrase.txt # Tab 不能用空格代替
+custom_phrase:
+  dictionary: ""
+  user_dict: custom_phrase     #设定用户词典名
+  db_class: stabledb           #设定用户词典类型，可设 tabledb〔文本〕或 userdb〔二进制〕
+  enable_completion: false     #提前显示尚未输入完整码的字〔true 或 false〕
+  enable_sentence: false       #是否开启自动造句〔true 或 false〕
+  initial_quality: 1           #设定此翻译器结果优先级，如果想要自定义的词排在前面，这个值尽量设大一点
+  
+# 日语版的emoji表情
+emoji_jp:
+  opencc_config: emoji_Japanese.json
+  option_name: emoji_jp
+  tips: all
+
+# reverse_lookup:
+#   dictionary: japanese
+#   prefix: "`"
+#   suffix: "'"
+#   tips: 〔日语〕
+#   preedit_format:
+
+
+punctuator:
+  import_preset: default
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "`[a-z]*'?$"
+    # expression: "^=.*$"  #计算器lua = 引导,
+
+key_binder:
+  import_preset: default
+  bindings:
+  # 设置哪些键可以翻页，需要哪个取消注释即可
+    # # 自定义
+    # - {accept: "~", send: "Shift+Right", when: has_menu}  #手机上用  切换编码切分
+    # - {accept: "'", send: "Shift+Delete", when: has_menu}  #手机上用  删词
+    # - { when: has_menu, accept: "#", toggle: emoji_suggestion } # 手机上用：在输入过程中，切换Emoji开关的快捷键，这里用#号切换
+    # - { when: always, accept: "^", select: .next }   #手机上用切换输入法
+
+    - { when: has_menu, accept: "#", toggle: emoji_jp } # 在输入过程中，切换Emoji开关的快捷键，这里用#号切换
+    - { when: has_menu, accept: "F6", toggle: emoji_jp } # window在输入过程中，用F6快捷键，切换Emoji开关
+    # - { when: always, accept: Control+Shift+space, select: .next }
